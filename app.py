@@ -61,8 +61,15 @@ st.plotly_chart(fig, use_container_width=True)
 
 st.subheader("Risk Actions")
 
-st.dataframe(
-    risk,
+risk_view = risk.copy()
+
+st.plotly_chart(
+    px.bar(
+        risk_view["action"].value_counts().reset_index(),
+        x="action",
+        y="count",
+        labels={"count": "SKUs"}
+    ),
     use_container_width=True
 )
     st.plotly_chart(px.bar(risk_view.action.value_counts().reset_index(),x='action',y='count',labels={'count':'SKUs'}),use_container_width=True)
