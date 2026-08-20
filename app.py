@@ -56,7 +56,7 @@ fig = px.line(
     labels={"total_value": "Revenue"}
 )
 
-st.plotly_chart(fig, use_container_width=True)with right:
+st.plotly_chart(fig, use_container_width=True)
     st.subheader("Risk Actions")
     st.plotly_chart(px.bar(risk_view.action.value_counts().reset_index(),x='action',y='count',labels={'count':'SKUs'}),use_container_width=True)
 
