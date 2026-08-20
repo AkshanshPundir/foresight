@@ -25,30 +25,10 @@ sales["total_value"] = pd.to_numeric(
 )
 sales = sales.dropna(subset=["date", "total_value"])
 
-categories = ["All"] + sorted(
-    risk["category"].dropna().astype(str).unique().tolist()
-)
+cat = "All"
 
-cat = st.sidebar.selectbox(
-    "Category",
-    categories,
-    key="category_filter"
-)
-
-if cat != "All":
-    skus = risk.loc[
-        risk["category"] == cat,
-        "sku_id"
-    ].tolist()
-
-    risk_view = risk[risk["category"] == cat]
-
-    fc_view = forecast[
-        forecast["sku_id"].isin(skus)
-    ]
-else:
-    risk_view = risk
-    fc_view = forecast
+risk_view = risk.copy()
+fc_view = forecast.copy()
 with open(METRICS_FILE, "r") as f:
     metrics = json.load(f)
 
