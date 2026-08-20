@@ -55,8 +55,7 @@ with open(METRICS_FILE, "r") as f:
 with open(SUMMARY_FILE, "r") as f:
     summary = json.load(f)
     cat = st.sidebar.selectbox(
-    "Category",
-    key="category_filter"
+    "Category"
 )
 
 if cat != "All":
