@@ -56,7 +56,6 @@ with open(SUMMARY_FILE, "r") as f:
     summary = json.load(f)
     cat = st.sidebar.selectbox(
     "Category",
-    ["All"] + sorted(risk["category"].dropna().unique().tolist())
     key="category_filter"
 )
 
