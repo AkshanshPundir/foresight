@@ -1,0 +1,14 @@
+{
+  "transactions": 100000,
+  "skus": 5000,
+  "stores": 30,
+  "customers": 9989,
+  "revenue": 109994350.68,
+  "units": 187897,
+  "stockout_risk_skus": 109,
+  "markdown_skus": 1170,
+  "watch_skus": 0,
+  "healthy_skus": 3216,
+  "sales_at_risk": 272804.86,
+  "capital_locked": 1847249736.8964367
+}
