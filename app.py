@@ -2,25 +2,54 @@ import streamlit as st
 import pandas as pd, json
 from pathlib import Path
 import pandas as pd
+import json
 import streamlit as st
 import plotly.express as px
 
 ROOT = Path(__file__).resolve().parent
-sales = pd.read_csv(ROOT / "sales_sample.csv")
-sales["date"] = pd.to_datetime(sales["date"])
+
+SALES_FILE = ROOT / "sales_sample.csv"
+RISK_FILE = ROOT / "risk_scores.csv"
+FORECAST_FILE = ROOT / "forecast_6_weeks.csv"
+METRICS_FILE = ROOT / "metrics.json"
+SUMMARY_FILE = ROOT / "summary.json"
+
+sales = pd.read_csv(SALES_FILE)
+risk = pd.read_csv(RISK_FILE)
+forecast = pd.read_csv(FORECAST_FILE)
+
+sales["date"] = pd.to_datetime(sales["date"], errors="coerce")
 sales["total_value"] = pd.to_numeric(
     sales["total_value"],
     errors="coerce"
 )
-
 sales = sales.dropna(subset=["date", "total_value"])
-METRICS_FILE = ROOT / "metrics.json"
-SUMMARY_FILE = ROOT / "summary.json"
+if "category" in risk.columns:
+    risk["category"] = risk["category"].fillna("Unknown")
 with open(METRICS_FILE, "r") as f:
     metrics = json.load(f)
 
 with open(SUMMARY_FILE, "r") as f:
     summary = json.load(f)
+    cat = st.sidebar.selectbox(
+    "Category",
+    ["All"] + sorted(risk["category"].dropna().unique().tolist())
+)
+
+if cat != "All":
+    skus = risk.loc[
+        risk["category"] == cat,
+        "sku_id"
+    ].tolist()
+
+    risk_view = risk[risk["category"] == cat]
+
+    fc_view = forecast[
+        forecast["sku_id"].isin(skus)
+    ]
+else:
+    risk_view = risk
+    fc_view = forecast
 
 st.set_page_config(page_title="FORESIGHT",page_icon="📦",layout="wide")
 st.title("📦 Project FORESIGHT")
