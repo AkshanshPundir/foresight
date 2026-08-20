@@ -25,12 +25,20 @@ with open(SUMMARY_FILE, "r") as f:
 st.set_page_config(page_title="FORESIGHT",page_icon="📦",layout="wide")
 st.title("📦 Project FORESIGHT")
 st.caption("Demand & Inventory Intelligence — NorthBay Living")
+if "category" in risk.columns:
+    risk["category"] = risk["category"].fillna("Unknown")
+cat = st.sidebar.selectbox(
+    "Category",
+    ["All"] + sorted(risk["category"].dropna().unique().tolist())
+)
 
-for col in ["category"]:
-    risk[col]=risk[col].fillna("Unknown")
-cat=st.sidebar.selectbox("Category",["All"]+sorted(risk.category.unique().tolist()))
-if cat!="All": risk_view=risk[risk.category==cat]; skus=risk_view.sku_id.tolist(); fc_view=forecast[forecast.sku_id.isin(skus)]
-else: risk_view=risk; fc_view=forecast
+if cat != "All":
+    skus = risk.loc[risk["category"] == cat, "sku_id"].tolist()
+    risk_view = risk[risk["category"] == cat]
+    fc_view = forecast[forecast["sku_id"].isin(skus)]
+else:
+    risk_view = risk
+    fc_view = forecast
 
 c1,c2,c3,c4=st.columns(4)
 c1.metric("Revenue",f"₹{summary['revenue']:,.0f}")
