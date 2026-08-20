@@ -2,17 +2,18 @@ import streamlit as st
 import pandas as pd, json
 from pathlib import Path
 import pandas as pd
-import json
+import streamlit as st
+import plotly.express as px
 
 ROOT = Path(__file__).resolve().parent
+sales = pd.read_csv(ROOT / "sales_sample.csv")
+sales["date"] = pd.to_datetime(sales["date"])
+sales["total_value"] = pd.to_numeric(
+    sales["total_value"],
+    errors="coerce"
+)
 
-RISK_FILE = ROOT / "risk_scores.csv"
-FORECAST_FILE = ROOT / "forecast_6_weeks.csv"
-METRICS_FILE = ROOT / "metrics.json"
-SUMMARY_FILE = ROOT / "summary.json"
-
-risk = pd.read_csv(RISK_FILE)
-forecast = pd.read_csv(FORECAST_FILE)
+sales = sales.dropna(subset=["date", "total_value"])
 
 with open(METRICS_FILE, "r") as f:
     metrics = json.load(f)
@@ -40,8 +41,22 @@ st.divider()
 left,right=st.columns(2)
 with left:
     st.subheader("Revenue Trend")
-    m=sales.set_index('date').resample('ME').total_value.sum().reset_index(); st.plotly_chart(px.line(m,x='date',y='total_value',labels={'total_value':'Revenue'}),use_container_width=True)
-with right:
+    m=(
+    sales
+    .set_index("date")
+    .resample("ME")["total_value"]
+    .sum()
+    .reset_index()
+)
+
+fig = px.line(
+    monthly_sales,
+    x="date",
+    y="total_value",
+    labels={"total_value": "Revenue"}
+)
+
+st.plotly_chart(fig, use_container_width=True)with right:
     st.subheader("Risk Actions")
     st.plotly_chart(px.bar(risk_view.action.value_counts().reset_index(),x='action',y='count',labels={'count':'SKUs'}),use_container_width=True)
 
