@@ -40,8 +40,9 @@ c4.metric("Capital Locked",f"₹{summary['capital_locked']:,.0f}")
 st.divider()
 left,right=st.columns(2)
 with left:
-    st.subheader("Revenue Trend")
-    m=(
+   st.subheader("Revenue Trend")
+
+monthly_sales = (
     sales
     .set_index("date")
     .resample("ME")["total_value"]
@@ -57,7 +58,13 @@ fig = px.line(
 )
 
 st.plotly_chart(fig, use_container_width=True)
-   st.subheader("Risk Actions")
+
+st.subheader("Risk Actions")
+
+st.dataframe(
+    risk,
+    use_container_width=True
+)
     st.plotly_chart(px.bar(risk_view.action.value_counts().reset_index(),x='action',y='count',labels={'count':'SKUs'}),use_container_width=True)
 
 st.subheader("Prioritised Inventory Actions")
