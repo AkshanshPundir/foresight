@@ -63,17 +63,29 @@ st.subheader("Risk Actions")
 
 risk_view = risk.copy()
 
+action_counts = (
+    risk_view["action"]
+    .value_counts()
+    .reset_index()
+)
+
+action_counts.columns = ["action", "count"]
+
+fig_risk = px.bar(
+    action_counts,
+    x="action",
+    y="count",
+    labels={
+        "action": "Recommended Action",
+        "count": "SKUs"
+    },
+    title="SKU Risk Actions"
+)
+
 st.plotly_chart(
-    px.bar(
-        risk_view["action"].value_counts().reset_index(),
-        x="action",
-        y="count",
-        labels={"count": "SKUs"}
-    ),
+    fig_risk,
     use_container_width=True
 )
-    st.plotly_chart(px.bar(risk_view.action.value_counts().reset_index(),x='action',y='count',labels={'count':'SKUs'}),use_container_width=True)
-
 st.subheader("Prioritised Inventory Actions")
 st.dataframe(risk_view[['sku_id','sku_name','category','stock_on_hand','avg_weekly_demand','weeks_cover','stockout_risk','overstock_risk','action','sales_at_risk','capital_locked']].head(100),use_container_width=True)
 
