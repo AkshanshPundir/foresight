@@ -1,14 +1,24 @@
 import streamlit as st
 import pandas as pd, json
 from pathlib import Path
-import plotly.express as px
+import pandas as pd
+import json
 
-ROOT=Path(__file__).resolve().parents[1]
-risk=pd.read_csv(ROOT/"outputs/risk_scores.csv")
-forecast=pd.read_csv(ROOT/"outputs/forecast_6_weeks.csv")
-sales=pd.read_csv(ROOT/"data/processed/merged_sales.csv",parse_dates=["date"])
-summary=json.load(open(ROOT/"outputs/summary.json"))
-metrics=json.load(open(ROOT/"outputs/metrics.json"))
+ROOT = Path(__file__).resolve().parent
+
+RISK_FILE = ROOT / "risk_scores.csv"
+FORECAST_FILE = ROOT / "forecast_6_weeks.csv"
+METRICS_FILE = ROOT / "metrics.json"
+SUMMARY_FILE = ROOT / "summary.json"
+
+risk = pd.read_csv(RISK_FILE)
+forecast = pd.read_csv(FORECAST_FILE)
+
+with open(METRICS_FILE, "r") as f:
+    metrics = json.load(f)
+
+with open(SUMMARY_FILE, "r") as f:
+    summary = json.load(f)
 
 st.set_page_config(page_title="FORESIGHT",page_icon="📦",layout="wide")
 st.title("📦 Project FORESIGHT")
