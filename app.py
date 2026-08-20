@@ -34,6 +34,7 @@ with open(SUMMARY_FILE, "r") as f:
     cat = st.sidebar.selectbox(
     "Category",
     ["All"] + sorted(risk["category"].dropna().unique().tolist())
+    key="category_filter"
 )
 
 if cat != "All":
