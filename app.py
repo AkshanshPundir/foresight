@@ -14,7 +14,8 @@ sales["total_value"] = pd.to_numeric(
 )
 
 sales = sales.dropna(subset=["date", "total_value"])
-
+METRICS_FILE = ROOT / "metrics.json"
+SUMMARY_FILE = ROOT / "summary.json"
 with open(METRICS_FILE, "r") as f:
     metrics = json.load(f)
 
